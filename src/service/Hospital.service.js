@@ -28,10 +28,32 @@ async function SaveNewDataInHospitals(name, city, image, speciality, rating){
     }
 }
 
-async function GetAllHospitals(city){
+async function GetHospitalsById(city){
     try{
     const cityName = city.toLowerCase()
       const result =  await Hospital.find({ city: { $regex: cityName, $options: 'i' } })
+
+      if(result){
+        return {
+            success : true,
+            data : result
+        }
+      }else{
+        throw new Error("Error inside the GetAllHospital Service")
+      }
+
+    }catch(err){
+        console.log(err)
+        return {
+            success : false
+        } 
+    }
+}
+
+async function GetAllHospitals(){
+    try{
+      
+      const result =  await Hospital.find()
 
       if(result){
         return {
@@ -107,5 +129,6 @@ module.exports = {
     GetAllHospitals,
     DeleteHospitalById,
     UpdateHospitalById,
-    AddHospitalDetails
+    AddHospitalDetails,
+    GetHospitalsById
 }

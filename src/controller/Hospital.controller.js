@@ -1,4 +1,4 @@
-const {SaveNewDataInHospitals, GetAllHospitals : GetAllHospitalService, DeleteHospitalById : DeleteHospitalByIdService, UpdateHospitalById, AddHospitalDetails} = require("./../service/Hospital.service")
+const {SaveNewDataInHospitals, GetAllHospitals : GetAllHospitalService, GetHospitalsById , DeleteHospitalById : DeleteHospitalByIdService, UpdateHospitalById, AddHospitalDetails} = require("./../service/Hospital.service")
 
 async function CreateNewHospital(req, res){
 
@@ -28,8 +28,28 @@ async function CreateNewHospital(req, res){
 async function GetAllHospitals(req, res){
 
     try{
+        const result = await GetAllHospitalService()
+
+        if(result.success){
+            res.status(200).json({
+                success : true,
+                data : result.data
+            })
+        }else{
+            throw new Error("Error in GetAllHospital Controller")
+        }
+
+    }catch(err){
+        res.status(500).json({
+            success : false
+        })
+    }
+}
+async function GetHospitalsByIdController(req, res){
+
+    try{
         const city = req.query.city.toLowerCase()
-        const result = await GetAllHospitalService(city)
+        const result = await GetHospitalsById(city)
 
         if(result.success){
             res.status(200).json({
@@ -100,5 +120,6 @@ module.exports = {
     GetAllHospitals,
     DeleteHospitalByIdController,
     UpdateHospitalByIdController,
-    AddHospitalDetailsController
+    AddHospitalDetailsController,
+    GetHospitalsByIdController
 }
